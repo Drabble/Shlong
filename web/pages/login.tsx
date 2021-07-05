@@ -1,21 +1,33 @@
 import Head from "next/head";
-import { useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
+import { connect } from "react-redux";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import { useAuth } from "../contexts/auth";
+import { useEffect } from "react";
 
-export default function Home() {
+function Login() {
   let windowObjectReference = null;
   let previousUrl = null;
+
+  const { user, loadUserFromCookies } = useAuth();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  });
 
   const receiveMessage = (event) => {
     // Do we trust the sender of this message? (might be
     // different from what we originally opened, for example).
-    console.log(event.origin);
     if (event.origin !== "http://localhost:3000") {
       return;
     }
     const { data } = event;
-    console.log(event);
     // if we trust the sender and the source is our popup
     if (data.source === "login-redirect") {
       console.log("Login successful...");
@@ -24,7 +36,12 @@ export default function Home() {
       //const redirectUrl = `/auth/google/login${payload}`;
       //window.location.pathname = redirectUrl;
 
-      axios.get(`http://localhost:5000/auth/google/callback${payload}`).then((response) => console.log(response));
+      axios.get(`http://localhost:5000/auth/google/callback${payload}`).then(async (response) => {
+        console.log(response);
+        Cookies.set("token", response.data.token, { expires: 60 });
+        await loadUserFromCookies();
+        router.push("/");
+      });
     }
   };
 
@@ -92,3 +109,9 @@ export default function Home() {
     </div>
   );
 }
+const mapStateToProps = (state) => {
+  return {};
+};
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

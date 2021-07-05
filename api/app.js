@@ -7,6 +7,7 @@ const passport = require("passport");
 const authService = require("./Services/AuthService");
 const passportSetup = require("./config/passport-setup");
 const cors = require("cors");
+const User = mongoose.model("User");
 
 require("dotenv").config();
 
@@ -56,22 +57,25 @@ app.get(
   }),
 );
 
+app.get("/users/me", authService.checkTokenMW, async (req, res) => {
+  try {
+    const authData = await authService.verifyToken(req, res);
+    const user = await User.findById(authData.userId);
+    console.log("User fetch me", user);
+    console.log("User fetch jwt data", authData);
+    if (user) res.status(200).send(user);
+    else res.sendStatus(404);
+    return;
+  } catch (err) {
+    res.sendStatus(403);
+  }
+});
+
 // callback url upon successful google authentication
 app.get("/auth/google/callback/", passport.authenticate("google", { session: false }), (req, res) => {
   authService.signToken(req, res);
 });
 
-// route to check token with postman.
-// using middleware to check for authorization header
-app.get("/verify", authService.checkTokenMW, (req, res) => {
-  authService.verifyToken(req, res);
-  if (null === req.authData) {
-    res.sendStatus(403);
-  } else {
-    res.json(req.authData);
-  }
-});
-
 app.listen(5000, function () {
-  console.log("Express app listening on port 3000!");
+  console.log("Express app listening on port 5000!");
 });

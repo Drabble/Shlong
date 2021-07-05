@@ -1,0 +1,30 @@
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" class="loading" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+width="32" height="32" viewBox="0 0 128 128" xml:space="preserve">
+
+<g>
+
+<circle cx="64" cy="64" r="32" stroke="#559bd2" fill="transparent" stroke-dasharray="200" stroke-linecap="round" stroke-width="6">
+   <animateTransform attributeType="xml"
+      attributeName="transform"
+      type="rotate"
+      dur="1.5s"
+      values="-90 64 64;-90 64 64;200 64 64;270 64 64"
+      repeatCount="indefinite"/>
+   <animate attributeType="xml"
+      attributeName="stroke-dashoffset"
+      dur="1.5s"
+      values="180;30;180;180"
+      repeatCount="indefinite"/>
+</circle>
+
+<animateTransform attributeType="xml"
+      attributeName="transform"
+      type="rotate"
+      dur="3s"
+      values="0 64 64;360 64 64"
+      repeatCount="indefinite"/>
+
+</g>
+</svg>
