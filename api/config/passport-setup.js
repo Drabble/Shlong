@@ -14,18 +14,27 @@ passport.use(
       clientSecret: process.env.CLIENT_SECRET,
     },
     async (accessToken, refreshToken, profile, done) => {
-      const email = profile.emails[0].value;
-
+      const user = {
+        googleId: profile.id,
+        displayName: profile.displayName,
+        firstName: profile.name.givenName,
+        lastName: profile.name.familyName,
+        image: profile.photos[0].value,
+        email: profile.emails[0].value,
+      };
       // check if user already exists
-      const currentUser = await User.findOne({ googleId: profile.id });
+      let currentUser = await User.findOneAndUpdate(
+        { googleId: profile.id },
+        user
+      );
       if (currentUser) {
         // already have the user -> return (login)
         return done(null, currentUser);
       } else {
         // register user and return
-        const newUser = await new User({ email: email, googleId: profile.id }).save();
+        const newUser = await new User(user).save();
         return done(null, newUser);
       }
-    },
-  ),
+    }
+  )
 );

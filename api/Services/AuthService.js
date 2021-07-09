@@ -20,11 +20,7 @@ exports.verifyToken = async (req, res) => {
 // Issue Token
 exports.signToken = (req, res) => {
   console.log("Logged user", req.user);
-  jwt.sign({ userId: req.user._id }, "secretkey", { expiresIn: "1 min" }, (err, token) => {
-    if (err) {
-      res.sendStatus(500);
-    } else {
-      res.json({ token });
-    }
+  return jwt.sign({ userId: req.user._id }, "secretkey", {
+    expiresIn: "10 min",
   });
 };

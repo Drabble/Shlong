@@ -5,17 +5,18 @@ import Link from "next/link";
 export default function SiteNavbar() {
   const { user, logout, isLoading } = useAuth();
   return (
-    <div className="sticky flex justify-between">
-      <Link href="/">
+    <div className="flex justify-between p-2">
+      <div/>
+      {/*<Link href="/">
         <a>Home</a>
-      </Link>
+  </Link>*/}
 
       <div className="text-right">
-        (user ?
-        <Link href="/login">
-          <a>Login</a>
-        </Link>{" "}
-        :<button onClick={() => logout({ redirectLocation: "/login" })}>Logout</button>)
+        {user ?
+       
+        <button className="hover:text-blue-600" onClick={() => logout({ redirectLocation: "/login" })}>Logout</button> :  <Link href="/login">
+        <a className="hover:text-blue-600" >Login</a>
+      </Link>}
       </div>
     </div>
   );

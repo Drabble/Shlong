@@ -1,62 +1,78 @@
-import Head from 'next/head'
-import Link from 'next/link'
+import Head from "next/head";
+import Link from "next/link";
+import React, { useEffect } from "react";
+import { useState } from "react";
+import { useAuth } from "../contexts/auth";
+import MainLayout from "../layouts/MainLayout";
+import api from "../services/api";
 
 export default function Home() {
+  const [users, setUsers] = useState([]);
+  const { logout } = useAuth();
+
+  useEffect(() => {
+    async function loadUsers() {
+      try {
+        await api.get("/users").then((response) => {
+          setUsers(response.data);
+        });
+      } catch {
+        logout();
+      }
+    }
+    loadUsers();
+  }, []);
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <Head>
-        <title>Shlong leaderboard</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <MainLayout>
+      <div className="flex flex-col items-center justify-center py-2 flex-grow mb-8">
+        <Head>
+          <title>Shlong leaderboard</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
 
-      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-          
-        <Link href="/">
-          <a className="mt-8 text-lg text-blue-600 hover:font-bold">Go back</a>
-        </Link>
+        <main className="flex flex-col items-center justify-center w-full flex-1 px-2 text-center">
+          <Link href="/">
+            <a className="mt-8 text-lg text-blue-600 hover:font-bold">
+              Go back
+            </a>
+          </Link>
 
-        <h1 className="text-6xl font-bold">
-          <span className="text-blue-600">
-            Shl
-          </span>
-          eaderboard
-        </h1>
+          <h1 className="text-6xl font-bold">Leaderboard</h1>
 
-
-        <div  className="max-w-2xl mt-6 sm:w-full bg-gray-200 py-4">
-            <table className="w-full">
+          <div className="md:max-w-2xl max-w-full mt-6 sm:w-full  bg-gray-100 p-4">
+            <div className="w-full max-w-full overflow-x-auto">
+              <table className="min-w-full w-auto">
                 <thead>
-                    <tr className="border-b border-black">
-                        <th>Username</th>
-                        <th>BTC</th>
-                        <th>$</th>
-                    </tr>
+                  <tr>
+                    <th></th>
+                    <th>Username</th>
+                    <th>Join date</th>
+                    <th>BTC</th>
+                    <th>$</th>
+                  </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            Tony
-                        </td>
-                        <td>
-                            3
-                        </td>
-                        <td>
-                            100'000
-                        </td>
+                  {users.map((user, i) => (
+                    <tr key={i}>
+                      <td>
+                        <img
+                          className="min-h-12 h-12 min-w-12 w-12"
+                          src={user.image}
+                        />
+                      </td>
+                      <td>{user.displayName}</td>
+                      <td>{user.createdAt}</td>
+                      <td>3</td>
+                      <td>{user.dollars}</td>
                     </tr>
+                  ))}
                 </tbody>
-            </table>
-        </div>
-       
-      </main>
-
-      <footer className="flex items-center justify-center w-full h-24 border-t mt-4">
-        <p
-          className="flex items-center justify-center"
-        >
-          Powered by <a className="text-blue-600 hover:font-bold ml-1" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Tony</a>
-        </p>
-      </footer>
-    </div>
-  )
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    </MainLayout>
+  );
 }

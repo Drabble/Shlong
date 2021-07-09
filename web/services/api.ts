@@ -1,5 +1,7 @@
 // api.js
 import axios from 'axios';
+import router from 'next/router';
+import Cookies from "js-cookie";
 
 let urls = {
     test: `http://localhost:5000`,
@@ -11,6 +13,14 @@ const api = axios.create({
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
+    },
+    validateStatus: function (status) {
+        if(status === 403){
+            Cookies.remove('token');
+            router.push('/login');
+            return false;
+        }
+        return true;
     }
 });
 

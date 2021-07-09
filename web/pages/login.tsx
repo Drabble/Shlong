@@ -36,23 +36,25 @@ function Login() {
       //const redirectUrl = `/auth/google/login${payload}`;
       //window.location.pathname = redirectUrl;
 
-      axios.get(`http://localhost:5000/auth/google/callback${payload}`).then(async (response) => {
-        console.log(response);
-        Cookies.set("token", response.data.token, { expires: 60 });
-        await loadUserFromCookies();
-        router.push("/");
-      });
+      axios
+        .get(`http://localhost:5000/auth/google/callback${payload}`)
+        .then(async (response) => {
+          Cookies.remove("token");
+          Cookies.set("token", response.data.token, { expires: 60 });
+          await loadUserFromCookies();
+          router.push("/");
+        });
     }
   };
 
   const openSignInWindow = (url, name) => {
-    console.log("Open login window...");
     if (typeof window !== "undefined") {
       // remove any existing event listeners
       window.removeEventListener("message", receiveMessage);
 
       // window features
-      const strWindowFeatures = "toolbar=no, menubar=no, width=600, height=700, top=100, left=100";
+      const strWindowFeatures =
+        "toolbar=no, menubar=no, width=600, height=700, top=100, left=100";
 
       if (windowObjectReference === null || windowObjectReference.closed) {
         /* if the pointer to the window object in memory does not exist
@@ -73,7 +75,11 @@ function Login() {
       }
 
       // add the listener for receiving a message from the popup
-      window.addEventListener("message", (event) => receiveMessage(event), false);
+      window.addEventListener(
+        "message",
+        (event) => receiveMessage(event),
+        false
+      );
       // assign the previous URL
       previousUrl = url;
     }
@@ -92,7 +98,12 @@ function Login() {
         </h1>
 
         <p className="mt-3 text-2xl">
-          <button onClick={() => openSignInWindow("http://localhost:5000/auth/google", "test")} className="bg-gray-50 rounded-lg p-8 hover:border">
+          <button
+            onClick={() =>
+              openSignInWindow("http://localhost:5000/auth/google", "test")
+            }
+            className="bg-gray-50 rounded-lg p-8 hover:border"
+          >
             <FcGoogle className="h-12 w-12" />
           </button>
         </p>
@@ -101,7 +112,10 @@ function Login() {
       <footer className="flex items-center justify-center w-full h-24 border-t mt-4">
         <p className="flex items-center justify-center">
           Powered by{" "}
-          <a className="text-blue-600 hover:font-bold ml-1" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+          <a
+            className="text-blue-600 hover:font-bold ml-1"
+            href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+          >
             Tony
           </a>
         </p>
