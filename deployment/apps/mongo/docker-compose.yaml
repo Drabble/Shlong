@@ -1,0 +1,23 @@
+networks:
+  external:
+    name: external
+  internal:
+    name: internal
+
+volumes:
+    mongo_data:
+
+services:
+    mongodb:
+        container_name: mongo
+        image : mongo
+        restart: unless-stopped
+        env_file:
+        - .env
+        - backend.env
+        networks:
+          - internal
+        volumes:
+          - mongo_data:/data/db
+        ports:
+          - 27017:27017

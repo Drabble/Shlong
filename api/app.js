@@ -8,7 +8,9 @@ const authService = require("./Services/AuthService");
 const passportSetup = require("./config/passport-setup");
 const cors = require("cors");
 const User = mongoose.model("User");
-require("./ws/binance");
+require("./ws/binance")(app);
+
+app.btc_price = 1;
 
 require("dotenv").config();
 
@@ -18,13 +20,9 @@ const mongodbUri = process.env.MONGO_URI;
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
 
-mongoose.connect(
-  mongodbUri,
-  { useUnifiedTopology: true, useNewUrlParser: true },
-  (error) => {
-    if (error) console.error(error);
-  }
-);
+mongoose.connect(mongodbUri, { useUnifiedTopology: true, useNewUrlParser: true }, (error) => {
+  if (error) console.error(error);
+});
 
 app.use(function (req, res, next) {
   let allowedOrigins = ["*"]; // list of url-s
@@ -32,10 +30,7 @@ app.use(function (req, res, next) {
   if (allowedOrigins.indexOf(origin) > -1) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.header("Access-Control-Expose-Headers", "Content-Disposition");
   next();
 });
@@ -62,22 +57,29 @@ app.get(
     scope: ["profile", "email"],
     accessType: "offline",
     approvalPrompt: "force",
-  })
+  }),
 );
 
 app.get("/users", authService.checkTokenMW, async (req, res) => {
   try {
     const authData = await authService.verifyToken(req, res);
-    const users = await User.find();
+    const users = await User.find().sort("-btc").exec();
     res.status(200).send(
-      users.map((user) => ({
-        displayName: user.displayName,
-        image: user.image,
-        createdAt: user.createdAt,
-        dollars: user.dollars,
-      }))
+      users
+        .map((user) => {
+          let dollars = user.state === "shlong" ? (user.btc * app.btc_price - user.dollars) * 10 + user.dollars : user.state === "shlort" ? -(user.btc * app.btc_price - user.dollars) * 10 + user.dollars : user.dollars;
+          return {
+            displayName: user.displayName,
+            image: user.image,
+            createdAt: user.createdAt,
+            dollars: dollars,
+            btc: dollars / app.btc_price,
+          };
+        })
+        .sort((a, b) => b.btc - a.btc),
     );
   } catch (err) {
+    console.error(err);
     res.sendStatus(403);
   }
 });
@@ -92,7 +94,9 @@ app.get("/users/me", authService.checkTokenMW, async (req, res) => {
         image: user.image,
         createdAt: user.createdAt,
         dollars: user.dollars,
+        btc: user.btc,
         state: user.state,
+        btc_price: app.btc_price,
       });
     else res.sendStatus(404);
   } catch (err) {
@@ -103,29 +107,40 @@ app.get("/users/me", authService.checkTokenMW, async (req, res) => {
 app.post("/state/:state", authService.checkTokenMW, async (req, res) => {
   try {
     const authData = await authService.verifyToken(req, res);
-    await User.updateOne(
-      { _id: authData.userId },
-      { $set: { state: req.params.state } }
-    );
+    const user = await User.findOne({ _id: authData.userId });
+
+    // Compute new money based on shlong/shlort, minimum 0, or liquidated?!?
+    if (user.state === "shlong") {
+      user.dollars = (app.btc_price / user.btcPriceAtLastStateChange - 1) * 10 * user.dollars + user.dollars;
+    } else if (user.state === "shlort") {
+      user.dollars = (1 - app.btc_price / user.btcPriceAtLastStateChange) * 10 * user.dollars + user.dollars;
+    }
+    user.dollars = user.dollars < 0 ? 0 : user.dollars;
+
+    // Set btc price before last state change
+    user.btc = user.dollars / app.btc_price;
+    user.btcPriceAtLastStateChange = app.btc_price;
+
+    // Update state
+    user.state = req.params.state;
+
+    user.save();
     res.status(204).send();
   } catch (err) {
+    console.error(err);
     res.sendStatus(403);
   }
 });
 
 // callback url upon successful google authentication
-app.get(
-  "/auth/google/callback/",
-  passport.authenticate("google", { session: false }),
-  (req, res) => {
-    try {
-      let token = authService.signToken(req, res);
-      res.status(200).send({ token });
-    } catch (err) {
-      res.sendStatus(403);
-    }
+app.get("/auth/google/callback/", passport.authenticate("google", { session: false }), (req, res) => {
+  try {
+    let token = authService.signToken(req, res);
+    res.status(200).send({ token });
+  } catch (err) {
+    res.sendStatus(403);
   }
-);
+});
 
 app.listen(5000, function () {
   console.log("Express app listening on port 5000!");

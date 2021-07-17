@@ -28,7 +28,17 @@ const userSchema = new mongoose.Schema({
   },
   dollars: {
     type: Number,
-    default: 100000,
+    default: 1000000,
+    required: true,
+  },
+  btc: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
+  btcPriceAtLastStateChange: {
+    type: Number,
+    default: 1000000,
     required: true,
   },
   state: {

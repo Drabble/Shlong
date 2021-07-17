@@ -1,0 +1,7 @@
+## Docker
+
+docker-compose.override.yaml
+docker-compose.*.override.yaml
+
+## dotenv environment variables filesp
+.env.*

@@ -1,0 +1,59 @@
+networks:
+  external:
+    name: external
+  internal:
+    name: internal
+
+services:
+  backend:
+    container_name: shlong-web
+    image: shlong-web:${SHLONG_WEB_VERSION:-latest}
+    restart: unless-stopped
+    env_file:
+      - .env
+      - web.env
+    networks:
+      - internal
+      - external
+    ports:
+      - 3000:3000
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=external
+      #
+      - traefik.http.routers.shlong-http.rule=Host(`${SHLONG_WEB_FQDN}`)
+      - traefik.http.routers.shlong-http.entrypoints=web
+      - traefik.http.routers.shlong-http.middlewares=redirect-to-https
+      #
+      - traefik.http.routers.shlong-web-https.rule=Host(`${SHLONG_WEB_FQDN}`)
+      - traefik.http.routers.shlong-web-https.entrypoints=websecure
+      - traefik.http.routers.shlong-web-https.tls=true
+      - traefik.http.routers.shlong-web-https.tls.certresolver=letsencrypt
+      #
+      - traefik.http.services.pmw-backend.loadbalancer.server.port=3000
+
+  frontend:
+    container_name: shlong-api
+    image: shlong-api:${SHLONG_API_VERSION:-latest}
+    restart: unless-stopped
+    env_file:
+      - .env
+      - api.env
+    networks:
+      - external
+    ports:
+      - 8181:8181
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=external
+      #
+      - traefik.http.routers.shlon-api-http.rule=Host(`${SHLONG_WEB_FQDN}`)
+      - traefik.http.routers.shlon-api-http.entrypoints=web
+      - traefik.http.routers.shlon-api-http.middlewares=redirect-to-https
+      #
+      - traefik.http.routers.shlond-api-https.rule=Host(`${SHLONG_WEB_FQDN}`)
+      - traefik.http.routers.shlond-api-https.entrypoints=websecure
+      - traefik.http.routers.shlond-api-https.tls=true
+      - traefik.http.routers.shlond-api-https.tls.certresolver=letsencrypt
+      #
+      - traefik.http.services.pmw-frontend.loadbalancer.server.port=5000

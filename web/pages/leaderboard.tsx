@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useAuth } from "../contexts/auth";
 import MainLayout from "../layouts/MainLayout";
 import api from "../services/api";
+import { formatDistance } from "date-fns";
 
 export default function Home() {
   const [users, setUsers] = useState([]);
@@ -33,9 +34,7 @@ export default function Home() {
 
         <main className="flex flex-col items-center justify-center w-full flex-1 px-2 text-center">
           <Link href="/">
-            <a className="mt-8 text-lg text-blue-600 hover:font-bold">
-              Go back
-            </a>
+            <a className="mt-8 text-lg text-blue-600 hover:font-bold">Go back</a>
           </Link>
 
           <h1 className="text-6xl font-bold">Leaderboard</h1>
@@ -56,15 +55,12 @@ export default function Home() {
                   {users.map((user, i) => (
                     <tr key={i}>
                       <td>
-                        <img
-                          className="min-h-12 h-12 min-w-12 w-12"
-                          src={user.image}
-                        />
+                        <img className="min-h-12 h-12 min-w-12 w-12" src={user.image} />
                       </td>
                       <td>{user.displayName}</td>
-                      <td>{user.createdAt}</td>
-                      <td>3</td>
-                      <td>{user.dollars}</td>
+                      <td>{formatDistance(new Date(user.createdAt), new Date(), { addSuffix: true })}</td>
+                      <td>{user.btc.toFixed(2)}</td>
+                      <td>{user.dollars.toFixed(0)}$</td>
                     </tr>
                   ))}
                 </tbody>

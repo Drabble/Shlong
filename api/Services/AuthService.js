@@ -21,6 +21,6 @@ exports.verifyToken = async (req, res) => {
 exports.signToken = (req, res) => {
   console.log("Logged user", req.user);
   return jwt.sign({ userId: req.user._id }, "secretkey", {
-    expiresIn: "10 min",
+    expiresIn: "1 day",
   });
 };

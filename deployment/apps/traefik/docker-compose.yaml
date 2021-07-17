@@ -1,0 +1,53 @@
+networks:
+  external:
+    name: external
+
+volumes:
+  traefik_data:
+
+services:
+  traefik:
+    container_name: traefik
+    image: traefik:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+      - traefik.env
+    command:
+      - --api=true
+      #
+      - --providers.docker=true
+      - --providers.docker.watch=true
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.network=external
+      #
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      #
+      - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
+      - --certificatesresolvers.letsencrypt.acme.storage=/etc/traefik/acme.json
+    networks:
+      - external
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_data:/etc/traefik/
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=external
+      #
+      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+      - traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true
+      #
+      - traefik.http.routers.reverse-proxy-web.rule=Host(`${SHLONG_TRAEFIK_FQDN}`)
+      - traefik.http.routers.reverse-proxy-web.entrypoints=web
+      - traefik.http.routers.reverse-proxy-web.service=api@internal
+      - traefik.http.routers.reverse-proxy-web.middlewares=redirect-to-https
+      #
+      - traefik.http.routers.reverse-proxy-websecure.rule=Host(`${SHLONG_TRAEFIK_FQDN}`)
+      - traefik.http.routers.reverse-proxy-websecure.entrypoints=websecure
+      - traefik.http.routers.reverse-proxy-websecure.service=api@internal
+      - traefik.http.routers.reverse-proxy-websecure.tls=true
+      - traefik.http.routers.reverse-proxy-websecure.tls.certresolver=letsencrypt
