@@ -9,12 +9,11 @@ volumes:
 
 services:
     mongodb:
-        container_name: mongo
-        image : mongo
+        container_name: shlong-mongo
+        image : mongo:latest
         restart: unless-stopped
         env_file:
-        - .env
-        - backend.env
+          - mongo.env
         networks:
           - internal
         volumes:

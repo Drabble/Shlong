@@ -19,7 +19,8 @@
     "react-icons": "^4.2.0",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",

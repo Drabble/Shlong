@@ -42,18 +42,18 @@ services:
     networks:
       - external
     ports:
-      - 8181:8181
+      - 5000:5000
     labels:
       - traefik.enable=true
       - traefik.docker.network=external
       #
-      - traefik.http.routers.shlon-api-http.rule=Host(`${SHLONG_WEB_FQDN}`)
-      - traefik.http.routers.shlon-api-http.entrypoints=web
-      - traefik.http.routers.shlon-api-http.middlewares=redirect-to-https
+      - traefik.http.routers.shlong-api-http.rule=Host(`${SHLONG_API_FQDN}`)
+      - traefik.http.routers.shlong-api-http.entrypoints=web
+      - traefik.http.routers.shlong-api-http.middlewares=redirect-to-https
       #
-      - traefik.http.routers.shlond-api-https.rule=Host(`${SHLONG_WEB_FQDN}`)
-      - traefik.http.routers.shlond-api-https.entrypoints=websecure
-      - traefik.http.routers.shlond-api-https.tls=true
-      - traefik.http.routers.shlond-api-https.tls.certresolver=letsencrypt
+      - traefik.http.routers.shlong-api-https.rule=Host(`${SHLONG_API_FQDN}`)
+      - traefik.http.routers.shlong-api-https.entrypoints=websecure
+      - traefik.http.routers.shlong-api-https.tls=true
+      - traefik.http.routers.shlong-api-https.tls.certresolver=letsencrypt
       #
       - traefik.http.services.pmw-frontend.loadbalancer.server.port=5000
