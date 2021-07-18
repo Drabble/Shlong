@@ -56,10 +56,12 @@ services:
       - traefik.http.routers.shlong-api-https.entrypoints=websecure
       - traefik.http.routers.shlong-api-https.tls=true
       - traefik.http.routers.shlong-api-https.tls.certresolver=letsencrypt
+      - traefik.http.routers.shlong-api-https.service=shlong-api-https
       - traefik.http.services.shlong-api-https.loadbalancer.server.port=5000
       #
       - traefik.http.routers.shlong-ws.rule=Host(`${SHLONG_WS_FQDN}`)
       - traefik.http.routers.shlong-ws.entrypoints=websecure
       - traefik.http.routers.shlong-ws.tls=true
       - traefik.http.routers.shlong-ws.tls.certresolver=letsencrypt
+      - traefik.http.routers.shlong-ws.service=shlong-ws
       - traefik.http.services.shlong-ws.loadbalancer.server.port=6000
