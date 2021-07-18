@@ -16,7 +16,7 @@ require("dotenv").config();
 
 app.use(cors());
 
-const mongodbUri = process.env.MONGO_URI;
+const mongodbUri = process.env.SHLONG_MONGO_URI;
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
 

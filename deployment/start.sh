@@ -3,8 +3,8 @@
 cd apps/traefik
 docker-compose up -d
 
-cd ../shlong
+cd ../mongo
 docker-compose up -d
 
-cd ../mongo
+cd ../shlong
 docker-compose up -d

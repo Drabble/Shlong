@@ -5,7 +5,7 @@ import MainLayout from "../layouts/MainLayout";
 import api from "../services/api";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { useEffect, useState } from "react";
-const client = new W3CWebSocket("ws://localhost:8080");
+const client = new W3CWebSocket(process.env.NEXT_PUBLIC_SHLONG_WEBSOCKET_URL);
 
 export default function Home() {
   const { user, loadUserFromCookies, logout } = useAuth();

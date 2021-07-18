@@ -4,7 +4,7 @@ const binance = (app) => {
   function startWebsocket() {
     const binanceWs = new WebSocket("wss://stream.binance.com:9443/ws/btcusdt@kline_5m");
     const wss = new WebSocket.Server({
-      port: 8080,
+      port: 6000,
       /*perMessageDeflate: {
       zlibDeflateOptions: {
         // See zlib defaults.

@@ -15,13 +15,7 @@ sample nodejs api with mongodb database and passportjs for authentication using 
 - Add google api key and mongodb uri in `.env` file.
 
 ```bash
-touch .env
-```
-
-```
-CLIENT_ID=''
-CLIENT_SECRET=''
-MONGO_URI=''
+cp .env.default .env
 ```
 
 ```javascript
