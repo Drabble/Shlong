@@ -15,6 +15,7 @@ services:
       - traefik.env
     command:
       - --api=true
+      - --api.dashboard=true
       #
       - --providers.docker=true
       - --providers.docker.watch=true
@@ -30,6 +31,7 @@ services:
       - external
     ports:
       - 80:80
+      - 8080:8080
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
