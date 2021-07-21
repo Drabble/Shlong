@@ -19,16 +19,18 @@ services:
       - traefik.enable=true
       - traefik.docker.network=external
       #
-      - traefik.http.routers.shlong-http.rule=Host(`${SHLONG_WEB_FQDN}`)
-      - traefik.http.routers.shlong-http.entrypoints=web
-      - traefik.http.routers.shlong-http.middlewares=redirect-to-https
+      - traefik.http.routers.shlong-web-http.rule=Host(`${SHLONG_WEB_FQDN}`)
+      - traefik.http.routers.shlong-web-http.entrypoints=web
+      - traefik.http.routers.shlong-web-http.middlewares=redirect-to-https
+      - traefik.http.routers.shlong-web-http.service=shlong-web
       #
       - traefik.http.routers.shlong-web-https.rule=Host(`${SHLONG_WEB_FQDN}`)
       - traefik.http.routers.shlong-web-https.entrypoints=websecure
       - traefik.http.routers.shlong-web-https.tls=true
       - traefik.http.routers.shlong-web-https.tls.certresolver=letsencrypt
+      - traefik.http.routers.shlong-api-https.service=shlong-web
       #
-      #- traefik.http.services.shlong-web-https.loadbalancer.server.port=3000
+      - traefik.http.services.shlong-web.loadbalancer.server.port=3000
 
   api:
     image: shlong-api:${SHLONG_API_VERSION:-latest}
