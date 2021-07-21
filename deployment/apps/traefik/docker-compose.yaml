@@ -22,10 +22,13 @@ services:
       - --providers.docker.exposedByDefault=false
       - --providers.docker.network=external
       #
+      - --log.level=DEBUG
+      #
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
       #
       - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
+      - --certificatesresolvers.letsencrypt.acme.email=antoine.drabble@gmail.com
       - --certificatesresolvers.letsencrypt.acme.storage=/etc/traefik/acme.json
     networks:
       - external
