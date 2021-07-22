@@ -15,7 +15,7 @@ services:
     networks:
       - external
     expose:
-      - 3000
+      - "3000"
     labels:
       - traefik.enable=true
       - traefik.docker.network=external
@@ -44,23 +44,16 @@ services:
       - external
       - internal
     expose:
-      - 5000
-      - 6000
+      - "5000"
+      - "6000"
     labels:
       - traefik.enable=true
       - traefik.docker.network=external
       #
-      - traefik.http.routers.shlong-ws-https.rule=Host(`${SHLONG_WS_FQDN}`)
-      - traefik.http.routers.shlong-ws-https.entrypoints=websecure
-      - traefik.http.routers.shlong-ws-https.tls=true
-      - traefik.http.routers.shlong-ws-https.tls.certresolver=letsencrypt
-      - traefik.http.routers.shlong-ws-https.service=shlong-ws
-      - traefik.http.services.shlong-ws.loadbalancer.server.port=6000
-      #
-      #- traefik.http.routers.shlong-api-http.rule=Host(`${SHLONG_API_FQDN}`)
-      #- traefik.http.routers.shlong-api-http.entrypoints=web
-      #- traefik.http.routers.shlong-api-http.middlewares=redirect-to-https
-      #- traefik.http.routers.shlong-api-http.service=shlong-api
+      - traefik.http.routers.shlong-api-http.rule=Host(`${SHLONG_API_FQDN}`)
+      - traefik.http.routers.shlong-api-http.entrypoints=web
+      - traefik.http.routers.shlong-api-http.middlewares=redirect-to-https
+      - traefik.http.routers.shlong-api-http.service=shlong-api
       #
       - traefik.http.routers.shlong-api-https.rule=Host(`${SHLONG_API_FQDN}`)
       - traefik.http.routers.shlong-api-https.entrypoints=websecure
@@ -68,3 +61,10 @@ services:
       - traefik.http.routers.shlong-api-https.tls.certresolver=letsencrypt
       - traefik.http.routers.shlong-api-https.service=shlong-api
       - traefik.http.services.shlong-api.loadbalancer.server.port=5000
+      #
+      - traefik.http.routers.shlong-ws-https.rule=Host(`${SHLONG_WS_FQDN}`)
+      - traefik.http.routers.shlong-ws-https.entrypoints=websecure
+      - traefik.http.routers.shlong-ws-https.tls=true
+      - traefik.http.routers.shlong-ws-https.tls.certresolver=letsencrypt
+      - traefik.http.routers.shlong-ws-https.service=shlong-ws
+      - traefik.http.services.shlong-ws.loadbalancer.server.port=6000
