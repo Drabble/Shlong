@@ -6,7 +6,8 @@ networks:
 
 services:
   web:
-    image: shlong-web:${SHLONG_WEB_VERSION:-latest}
+    container_name: shlong-web
+    image: shlong-web:${SHLONG_WEB_VERSION:latest}
     restart: unless-stopped
     env_file:
       - .env
@@ -33,7 +34,8 @@ services:
       - traefik.http.services.shlong-web.loadbalancer.server.port=3000
 
   api:
-    image: shlong-api:${SHLONG_API_VERSION:-latest}
+    container_name: shlong-api
+    image: shlong-api:${SHLONG_API_VERSION:latest}
     restart: unless-stopped
     env_file:
       - .env
