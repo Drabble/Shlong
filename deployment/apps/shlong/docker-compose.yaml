@@ -7,7 +7,7 @@ networks:
 services:
   web:
     container_name: shlong-web
-    image: shlong-web:${SHLONG_WEB_VERSION:latest}
+    image: shlong-web:${SHLONG_WEB_VERSION:-latest}
     restart: unless-stopped
     env_file:
       - .env
@@ -35,7 +35,7 @@ services:
 
   api:
     container_name: shlong-api
-    image: shlong-api:${SHLONG_API_VERSION:latest}
+    image: shlong-api:${SHLONG_API_VERSION:-latest}
     restart: unless-stopped
     env_file:
       - .env
