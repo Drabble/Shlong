@@ -53,7 +53,7 @@ services:
       - traefik.http.routers.shlong-api-http.rule=Host(`${SHLONG_API_FQDN}`)
       - traefik.http.routers.shlong-api-http.entrypoints=web
       - traefik.http.routers.shlong-api-http.middlewares=redirect-to-https
-      #- traefik.http.routers.shlong-api-http.service=shlong-api
+      - traefik.http.routers.shlong-api-http.service=shlong-api
       #
       - traefik.http.routers.shlong-api-https.rule=Host(`${SHLONG_API_FQDN}`)
       - traefik.http.routers.shlong-api-https.entrypoints=websecure
@@ -61,7 +61,7 @@ services:
       - traefik.http.routers.shlong-api-https.tls.certresolver=letsencrypt
       - traefik.http.routers.shlong-api-https.service=shlong-api
       - traefik.http.services.shlong-api.loadbalancer.server.port=5000
-      ##
+      #
       - traefik.http.routers.shlong-ws-https.rule=Host(`${SHLONG_WS_FQDN}`)
       - traefik.http.routers.shlong-ws-https.entrypoints=websecure
       - traefik.http.routers.shlong-ws-https.tls=true
