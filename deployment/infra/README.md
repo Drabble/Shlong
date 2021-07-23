@@ -1,4 +1,4 @@
-# **BeeScreens** - Infrastructure deployment
+# **Shlong** - Infrastructure deployment
 
 Google Cloud is used to host the entire infrastructure.
 
@@ -64,7 +64,7 @@ If needed, edit the Terraform configuration files to reflect the project ID and 
 
 Go in `Compute Engine` -> `VM instances` and create a new instance:
 
-- Name: `beescreens-manual`
+- Name: `shlong-manual`
 - Region: `us-east1 (South Carolina)`
 - Zone: `us-east1-b`
 - Machine family: `General-purpose`

@@ -1,4 +1,4 @@
-# **BeeScreens** - LibreNMS
+# **Shlong** - LibreNMS
 
 The **N**etwork **M**onitoring **S**ystem allows to monitor and check the overall system's health. It can help to detect failing devices, such as over-heating or disks failure.
 

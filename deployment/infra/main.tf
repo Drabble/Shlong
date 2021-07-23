@@ -5,7 +5,7 @@ terraform {
 
 provider "google" {
   credentials = file("service-key.json")
-  project     = "beescreens"
+  project     = "shlong"
   region      = "us-east1-b"
 }
 
@@ -15,7 +15,7 @@ resource "random_id" "instance_id" {
 
 // A single Compute Engine instance
 resource "google_compute_instance" "default" {
-  name         = "beescreens-vm-${random_id.instance_id.hex}"
+  name         = "shlong-vm-${random_id.instance_id.hex}"
   machine_type = "f1-micro"
   zone         = "us-east1-b"
 
@@ -26,7 +26,7 @@ resource "google_compute_instance" "default" {
   }
 
   metadata = {
-    ssh-keys = "beescreens:${file("id_ed25519.pub")}"
+    ssh-keys = "shlong:${file("id_ed25519.pub")}"
   }
 
   // Install the minimum required packages on the VM
@@ -42,7 +42,7 @@ resource "google_compute_instance" "default" {
 }
 
 resource "google_compute_firewall" "default" {
-  name    = "beescreens-app-firewall"
+  name    = "shlong-app-firewall"
   network = "default"
 
   allow {

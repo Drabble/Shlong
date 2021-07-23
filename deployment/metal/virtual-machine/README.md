@@ -1,4 +1,4 @@
-# **BeeScreens** - Virtual machine deployment
+# **Shlong** - Virtual machine deployment
 
 Debian is used as the OS host for the project.
 
