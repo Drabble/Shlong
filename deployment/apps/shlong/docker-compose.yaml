@@ -64,6 +64,6 @@ services:
       - traefik.http.routers.shlong-web-https.entrypoints=websecure
       - traefik.http.routers.shlong-web-https.tls=true
       - traefik.http.routers.shlong-web-https.tls.certresolver=letsencrypt
-      - traefik.http.routers.shlong-api-https.service=shlong-web
+      - traefik.http.routers.shlong-web-https.service=shlong-web
       #
       - traefik.http.services.shlong-web.loadbalancer.server.port=3000
