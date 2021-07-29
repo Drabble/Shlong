@@ -46,7 +46,7 @@ export default function Home() {
           </h1>
           <p className="mt-3 text-lg">
             Bitcoin price
-            <a className="hover:text-blue-600 cursor-pointer" href="https://www.tradingview.com/chart/SrTXfsxj/" target="_blank">
+            <a className="hover:text-blue-600 cursor-pointer" href="https://www.binance.com/en/trade/BTC_USDT?theme=dark&type=spot" target="_blank">
               <span className="font-mono bg-gray-100 rounded-md ml-1 p-2">{btcUsd.toFixed(2)}$</span>
             </a>
           </p>
